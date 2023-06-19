@@ -11,12 +11,11 @@ MY_EMAIL = os.getenv('MY_EMAIL')
 def get_jira_ticket(key):
     if "ZERMP" in key or "Zermatt MP" in key:
         return "ZERMP-288"
-    elif "Zermatt App" in key:
+    if "Zermatt App" in key:
         return "ZERAPP-257"
-    elif key == "1 to 1 Oleksandr / Artem" or key == "CI-Team weekly":
+    if key in ("1 to 1 Oleksandr / Artem", "CI-Team weekly"):
         return "CITEAM-359"
-    else:
-        return ""
+    return ""
 
 
 def work_with_data(meet):
@@ -35,17 +34,17 @@ def work_with_data(meet):
 
 
 if __name__ == '__main__':
-    tempo_endpoint = "/secure/Tempo.jspa#/my-work/week"
+    TEMPO_ENDPOINT = "/secure/Tempo.jspa#/my-work/week"
     date = get_and_validate_date()
     meets = get_meets(date)
     if meets[MY_EMAIL]:
-        for meet in meets[MY_EMAIL]:
-            jira_log_data = work_with_data(meet)
-            if jira_log_data != {}:
-                for key, value in jira_log_data.items():
-                    log_time(key, date, value[1], value[0])
+        for my_meet in meets[MY_EMAIL]:
+            jira_log_data = work_with_data(my_meet)
+            if jira_log_data:
+                for d_key, d_value in jira_log_data.items():
+                    log_time(d_key, date, d_value[1], d_value[0])
         print("Please add the 'Billing key' to each new event manually.")
-        open_tempo(tempo_endpoint)
+        open_tempo(TEMPO_ENDPOINT)
 
     else:
         print(f"Can not find meetings for email {MY_EMAIL} for date {date}")

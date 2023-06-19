@@ -1,16 +1,13 @@
+import sys
 import argparse
 from datetime import datetime, timedelta
-from sys import exit
 
 # TODO: add the ability to transmit multiple dates, or a period of time
 
 def validate_date(date_string):
     try:
         date = datetime.strptime(date_string, "%Y-%m-%d")
-        if date.strftime("%Y-%m-%d") == date_string:
-            return True
-        else:
-            return False
+        return date.strftime("%Y-%m-%d") == date_string
     except ValueError:
         return False
 
@@ -21,7 +18,8 @@ def get_and_validate_date():
     parser.add_argument(
         "-date",
         default="today",
-        help="set date for logging (YYYY-MM-DD)")
+        help="set date for logging (YYYY-MM-DD), also 'today' and \
+             'yesterday' shortcuts available, default value - today")
     args = parser.parse_args()
     if args.date == "today":
         day = datetime.now().strftime("%Y-%m-%d")
@@ -31,7 +29,7 @@ def get_and_validate_date():
         day = args.date
     else:
         print(f"Wrong date format: {args.date}, should be YYYY-MM-DD")
-        exit()
+        sys.exit()
     return day
 
 

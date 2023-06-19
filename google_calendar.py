@@ -1,8 +1,7 @@
 import os
-from dotenv import load_dotenv
 import datetime
 import pickle
-import os.path
+from dotenv import load_dotenv
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -54,7 +53,8 @@ def get_info_about_confirmed_events(events):
             going_statuce = False
             try:
                 time_diff = datetime.datetime.fromisoformat(
-                    event["end"]['dateTime']) - datetime.datetime.fromisoformat(event["start"]['dateTime'])
+                    event["end"]['dateTime']) - \
+                    datetime.datetime.fromisoformat(event["start"]['dateTime'])
             except BaseException:
                 time_diff = "unknown_time"
             try:
@@ -72,11 +72,11 @@ def get_info_about_confirmed_events(events):
     return approved_events
 
 
-def get_events_from_callendar(service, id, start_time, end_time):
+def get_events_from_callendar(service, calendar_id, start_time, end_time):
     events_result = service.events().list(
         timeMin=start_time,
         timeMax=end_time,
-        calendarId=id,
+        calendarId=calendar_id,
         maxResults=10, singleEvents=True,
         orderBy='startTime').execute()
     events = events_result.get('items', [])
@@ -122,13 +122,13 @@ def get_meets(log_date):
     else:
         for calendar in calendars:
             summary = calendar['summary']
-            id = calendar['id']
+            call_id = calendar['id']
             if summary == MY_EMAIL:
                 new_calendars.update(
-                    {summary: get_events_from_callendar(service, id, start_time, end_time)})
+                    {summary: get_events_from_callendar(service, call_id, start_time, end_time)})
     return new_calendars
 
 
 if __name__ == '__main__':
-    log_date = get_and_validate_date()
-    print(get_meets(log_date))
+    date = get_and_validate_date()
+    print(get_meets(date))
