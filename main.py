@@ -11,7 +11,7 @@ MY_EMAIL = os.getenv('MY_EMAIL')
 def get_jira_ticket(key):
     if "ZERMP" in key or "Zermatt MP" in key:
         return "ZERMP-288"
-    if "Zermatt App" in key:
+    if "Zermatt App" in key or "Zermatt - Review" in key:
         return "ZERAPP-257"
     if key in ("1 to 1 Oleksandr / Artem", "CI-Team weekly"):
         return "CITEAM-359"
