@@ -6,7 +6,11 @@ from dotenv import load_dotenv
 from get_date import get_and_validate_date
 
 # Jira API credentials
-load_dotenv("./creds/.env")
+load_dotenv(
+    os.path.join(
+        os.path.dirname(
+            os.path.realpath(__file__)),
+        "creds/.env"))
 JIRA_URL = os.getenv("JIRA_URL")
 JIRA_TOKEN = os.getenv("JIRA_TOKEN")
 
@@ -38,7 +42,11 @@ def log_time(ticket_key, started_time, time_spent, comment):
     }
 
     # Send the POST request to log work
-    response = requests.post(api_url, headers=headers, json=worklog_data, timeout=10)
+    response = requests.post(
+        api_url,
+        headers=headers,
+        json=worklog_data,
+        timeout=10)
 
     # Check the response status code
     if response.status_code == 201:
@@ -46,6 +54,7 @@ def log_time(ticket_key, started_time, time_spent, comment):
             f"Work logged successfully - {time_spent} to {ticket_key} with comment {comment}")
     else:
         print(f"Failed to log work. Status code: {response.status_code}")
+
 
 def open_tempo(endpoint):
     url = urljoin(JIRA_URL, endpoint)
@@ -57,6 +66,7 @@ def open_tempo(endpoint):
         webbrowser.open(url)
     else:
         print(f"Error: {response.status_code}")
+
 
 if __name__ == '__main__':
     log_date = get_and_validate_date()

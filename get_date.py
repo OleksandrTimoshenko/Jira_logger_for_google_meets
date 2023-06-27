@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 # TODO: add the ability to transmit multiple dates, or a period of time
 
+
 def validate_date(date_string):
     try:
         date = datetime.strptime(date_string, "%Y-%m-%d")

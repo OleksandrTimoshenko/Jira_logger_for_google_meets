@@ -7,13 +7,20 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from get_date import get_and_validate_date
 
-load_dotenv("./creds/.env")
+load_dotenv(
+    os.path.join(
+        os.path.dirname(
+            os.path.realpath(__file__)),
+        "creds/.env"))
 MY_EMAIL = os.getenv('MY_EMAIL')
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
-CREDENTIALS_FILE = './creds/creds.json'
+CREDENTIALS_FILE = os.path.join(
+    os.path.dirname(
+        os.path.realpath(__file__)),
+    'creds/creds.json')
 
 
 def logger(info):
@@ -26,8 +33,12 @@ def get_calendar_service():
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
+    token_file = os.path.join(
+        os.path.dirname(
+            os.path.realpath(__file__)),
+                "token.pickle")
+    if os.path.exists(token_file):
+        with open(token_file, 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -39,7 +50,7 @@ def get_calendar_service():
             creds = flow.run_local_server(port=0)
 
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
+        with open(token_file, 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
@@ -124,8 +135,8 @@ def get_meets(log_date):
             summary = calendar['summary']
             call_id = calendar['id']
             if summary == MY_EMAIL:
-                new_calendars.update(
-                    {summary: get_events_from_callendar(service, call_id, start_time, end_time)})
+                new_calendars.update({summary: get_events_from_callendar(
+                    service, call_id, start_time, end_time)})
     return new_calendars
 
 

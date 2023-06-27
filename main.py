@@ -4,10 +4,16 @@ from google_calendar import get_meets
 from jira_logger import log_time, open_tempo
 from get_date import get_and_validate_date
 
-load_dotenv("./creds/.env")
+load_dotenv(
+    os.path.join(
+        os.path.dirname(
+            os.path.realpath(__file__)),
+        "creds/.env"))
 MY_EMAIL = os.getenv('MY_EMAIL')
 
 # Create your own function based on the names of your meets and Jira tickets
+
+
 def get_jira_ticket(key):
     if "ZERMP" in key or "Zermatt MP" in key:
         return "ZERMP-288"
